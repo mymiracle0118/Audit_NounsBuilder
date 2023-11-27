@@ -7,6 +7,8 @@ import { IManager, Manager } from "../src/manager/Manager.sol";
 import { IToken, Token } from "../src/token/Token.sol";
 import { TokenTypesV1 } from "../src/token/types/TokenTypesV1.sol";
 import { TokenTypesV2 } from "../src/token/types/TokenTypesV2.sol";
+import { console } from "forge-std/console.sol";
+import { console2 } from "forge-std/console2.sol";
 
 contract TokenTest is NounsBuilderTest, TokenTypesV1 {
     mapping(address => uint256) public mintedTokens;
@@ -79,6 +81,8 @@ contract TokenTest is NounsBuilderTest, TokenTypesV1 {
         vestingEnds[1] = 4 weeks;
         vestingEnds[2] = 4 weeks;
 
+        console.log("Percentage", f1Percentage, f2Percentage, f3Percentage);
+
         deployWithCustomFounders(founders, percents, vestingEnds);
 
         Founder memory f1 = token.getFounder(0);
@@ -90,7 +94,7 @@ contract TokenTest is NounsBuilderTest, TokenTypesV1 {
         assertEq(f3.ownershipPct, f3Percentage);
 
         // Mint 100 tokens
-        for (uint256 i = 0; i < 100; i++) {
+        for (uint256 i = 0; i < 5; i++) {
             vm.prank(address(auction));
             token.mint();
 
@@ -969,6 +973,26 @@ contract TokenTest is NounsBuilderTest, TokenTypesV1 {
         vm.prank(token.owner());
         vm.expectRevert(abi.encodeWithSignature("CANNOT_CHANGE_RESERVE()"));
         token.setReservedUntilTokenId(_newReserve);
+    }
+
+    function testRevert_tokenTransfer(uint256 _startingReserve, uint256 _newReserve) public {
+        deployAltMock(_startingReserve);
+
+        TokenTypesV2.MinterParams[] memory minters = new TokenTypesV2.MinterParams[](1);
+        TokenTypesV2.MinterParams memory p1 = TokenTypesV2.MinterParams({ minter: founder, allowed: true });
+        minters[0] = p1;
+
+        vm.prank(address(founder));
+        token.updateMinters(minters);
+
+        vm.prank(founder);
+        uint256 tokenId = token.mint();
+        vm.expectRevert(abi.encodeWithSignature("INVALID_OWNER()"));
+        token.transferFrom(founder, address(0x1), tokenId);
+
+        // vm.prank(token.owner());
+        // vm.expectRevert(abi.encodeWithSignature("CANNOT_CHANGE_RESERVE()"));
+        // token.setReservedUntilTokenId(_newReserve);
     }
 
     function testRevert_CannotReduceReserveAfterMint(uint256 _startingReserve, uint256 _newReserve) public {

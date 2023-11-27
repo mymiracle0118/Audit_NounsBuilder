@@ -1,0 +1,35 @@
+// Test All
+forge src/test -vv
+
+// Test with call logs
+forge test -vvvvv
+
+// TestUpdateMinters
+forge test -vvvv --match-path test/forking/TestUpdateMinters.t.sol --match-contract TestUpdateMinters --match-test "testUpdateMinters*"
+
+// TestUpdateOwners
+
+forge test -vvvv --match-path test/forking/TestUpdateOwners.t.sol --match-contract PurpleTests --match-test "setUp*"
+
+forge test -vvvv --match-path test/forking/TestUpdateOwners.t.sol --match-contract PurpleTests --match-test "test_purpleUpgrade*"
+
+// Token
+forge test -vvvv --match-path test/Token.t.sol --match-contract TokenTest --match-test "test_MockTokenInit*"
+
+forge test -vvvv --match-path test/Token.t.sol --match-contract TokenTest --match-test "test_FounderShareAllocationFuzz*"
+
+forge test -vvvv --match-path test/Token.t.sol --match-contract TokenTest --match-test "test_MockFounders*"
+
+forge test -vvvv --match-path test/Token.t.sol --match-contract TokenTest --match-test "test_TokenIdCollisionAvoidance*"
+
+forge test -vvvv --match-path test/Token.t.sol --match-contract TokenTest --match-test "test_FounderScheduleRounding*"
+
+forge test -vvvv --match-path test/Token.t.sol --match-contract TokenTest --match-test "test_FounderScheduleRounding2*"
+
+forge test -vvvv --match-path test/Token.t.sol --match-contract TokenTest --match-test "test_OverwriteCheckpointWithSameTimestamp*"
+
+forge test -vvvv --match-path test/Token.t.sol --match-contract TokenTest --match-test "test_UpdateMintersOwnerCanRemoveMinters*"
+
+forge test -vvvv --match-path test/Token.t.sol --match-contract TokenTest --match-test "testRevert_tokenTransfer*"
+
+testRevert_tokenTransfer

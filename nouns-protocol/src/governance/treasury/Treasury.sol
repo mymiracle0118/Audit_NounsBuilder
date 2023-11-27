@@ -137,7 +137,7 @@ contract Treasury is ITreasury, VersionedContract, UUPS, Ownable, ProposalHasher
         bytes[] calldata _calldatas,
         bytes32 _descriptionHash,
         address _proposer
-    ) external payable onlyOwner {
+    ) external payable onlyOwner {// @audit any target address can call?
         // Get the proposal id
         bytes32 proposalId = hashProposal(_targets, _values, _calldatas, _descriptionHash, _proposer);
 

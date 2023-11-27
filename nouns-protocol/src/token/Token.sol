@@ -233,7 +233,7 @@ contract Token is IToken, VersionedContract, UUPS, Ownable, ReentrancyGuard, ERC
             do {
                 // Get the next token to mint
                 tokenId = reservedUntilTokenId + settings.mintCount++;
-
+                // @audit if resevered is 99 and mintwithvesting function, founder's tokenId will be started from 0?
                 // Lookup whether the token is for a founder, and mint accordingly if so
             } while (_isForFounder(tokenId));
         }
@@ -372,7 +372,7 @@ contract Token is IToken, VersionedContract, UUPS, Ownable, ReentrancyGuard, ERC
 
     /// @notice Update the list of allocation owners
     /// @param newFounders the full list of founders
-    function updateFounders(IManager.FounderParams[] calldata newFounders) external onlyOwner {
+    function updateFounders(IManager.FounderParams[] calldata newFounders) external onlyOwner { // @audit anytime can upgrade?
         // Cache the number of founders
         uint256 numFounders = settings.numFounders;
 
