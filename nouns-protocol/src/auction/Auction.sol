@@ -224,7 +224,7 @@ contract Auction is IAuction, VersionedContract, UUPS, Ownable, ReentrancyGuard,
             }
 
             // Refund the previous bidder
-            _handleOutgoingTransfer(lastHighestBidder, lastHighestBid);
+            _handleOutgoingTransfer(lastHighestBidder, lastHighestBid);// @audit fallback function can be called
         }
 
         emit AuctionBid(_tokenId, msg.sender, msgValue, extend, auction.endTime);
@@ -524,7 +524,7 @@ contract Auction is IAuction, VersionedContract, UUPS, Ownable, ReentrancyGuard,
         assembly {
             // Transfer ETH to the recipient
             // Limit the call to 50,000 gas
-            success := call(50000, _to, _amount, 0, 0, 0, 0)
+            success := call(50000, _to, _amount, 0, 0, 0, 0)// @audit fall back function will be called
         }
 
         // If the transfer failed:
