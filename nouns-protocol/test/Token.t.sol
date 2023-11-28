@@ -647,10 +647,74 @@ contract TokenTest is NounsBuilderTest, TokenTypesV1 {
             vestExpiry: 2556057600
         });
 
+        TokenTypesV2.MinterParams memory p1 = TokenTypesV2.MinterParams({ minter: address(0x7), allowed: true });
+        TokenTypesV2.MinterParams memory p2 = TokenTypesV2.MinterParams({ minter: address(0x8), allowed: true });
+        TokenTypesV2.MinterParams[] memory minters = new TokenTypesV2.MinterParams[](2);
+        minters[0] = p1;
+        minters[1] = p2;
+
+        vm.prank(address(founder));
+        token.updateMinters(minters);
+
+        assertTrue(token.minter(minters[0].minter));
+        assertTrue(token.minter(minters[1].minter));
+
+        vm.prank(minters[0].minter);
+        uint256 tokenId = token.mint();
+        assertEq(token.ownerOf(tokenId), minters[0].minter);
+
+        vm.prank(address(founder));
+        // uint256 tokenId = token.mint();
+        token.updateFounders(newFoundersArr);
+
+        console.log("Token Owner", token.ownerOf(0), token.ownerOf(1), token.ownerOf(tokenId));
+
+        assertEq(token.getFounders().length, 1);
+    }
+
+    function test_updatefounders_error() public {
+        deployMock();
+
+        IManager.FounderParams[] memory newFoundersArr = new IManager.FounderParams[](2);
+        newFoundersArr[0] = IManager.FounderParams({
+            wallet: address(0x06B59d0b6AdCc6A5Dc63553782750dc0b41266a3),
+            ownershipPct: 50,
+            vestExpiry: 2556057600
+        });
+        newFoundersArr[1] = IManager.FounderParams({
+            wallet: address(0x06B59d0b6AdCc6A5Dc63553782750dc0b41266a3),
+            ownershipPct: 10,
+            vestExpiry: 2556057600
+        });
+
+        TokenTypesV2.MinterParams memory p1 = TokenTypesV2.MinterParams({ minter: address(0x7), allowed: true });
+        // TokenTypesV2.MinterParams memory p2 = TokenTypesV2.MinterParams({ minter: address(0x8), allowed: true });
+        TokenTypesV2.MinterParams[] memory minters = new TokenTypesV2.MinterParams[](2);
+        minters[0] = p1;
+        // minters[1] = p2;
+
+        vm.prank(address(founder));
+        token.updateMinters(minters);
+
+        assertTrue(token.minter(minters[0].minter));
+        // assertTrue(token.minter(minters[1].minter));
+
+        vm.prank(minters[0].minter);
+        uint256 tokenId = token.mint();
+        assertEq(token.ownerOf(tokenId), minters[0].minter);
+        console.log("Before Total supply", token.totalSupply());
+
         vm.prank(address(founder));
         token.updateFounders(newFoundersArr);
 
-        assertEq(token.getFounders().length, 1);
+        console.log("Token Owner", token.ownerOf(0), token.ownerOf(1), token.ownerOf(tokenId));
+
+        vm.prank(minters[0].minter);
+        tokenId = token.mint();
+        assertEq(token.ownerOf(tokenId), minters[0].minter);
+        console.log("After Total supply", token.totalSupply());
+
+        assertEq(token.getFounders().length, 2);
     }
 
     function test_UpdateFounderShareAllocationFuzz(uint256 f1Percentage, uint256 f2Percentage, uint256 f3Percentage) public {

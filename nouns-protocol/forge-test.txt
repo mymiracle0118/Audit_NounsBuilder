@@ -32,4 +32,15 @@ forge test -vvvv --match-path test/Token.t.sol --match-contract TokenTest --matc
 
 forge test -vvvv --match-path test/Token.t.sol --match-contract TokenTest --match-test "testRevert_tokenTransfer*"
 
-testRevert_tokenTransfer
+forge test -vvvv --match-path test/Token.t.sol --match-contract TokenTest --match-test "test_UpdateFoundersZeroOwnership*"
+
+forge test -vvvv --match-path test/Token.t.sol --match-contract TokenTest --match-test "test_UpdateFoundersZeroOwnership*"
+
+forge test -vvvv --match-path test/Token.t.sol --match-contract TokenTest --match-test "test_updatefounders_error*"
+
+
+//Auction
+
+forge test -vvvv --match-path test/Auction.t.sol --match-contract AuctionTest --match-test "test_AuctionHouseInitialized*"
+
+test_AuctionHouseInitialized

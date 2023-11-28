@@ -372,7 +372,7 @@ contract Token is IToken, VersionedContract, UUPS, Ownable, ReentrancyGuard, ERC
 
     /// @notice Update the list of allocation owners
     /// @param newFounders the full list of founders
-    function updateFounders(IManager.FounderParams[] calldata newFounders) external onlyOwner { // @audit anytime can upgrade?
+    function updateFounders(IManager.FounderParams[] calldata newFounders) external onlyOwner { // @audit if this function calls after mint, prev minted founder's nft will be remained
         // Cache the number of founders
         uint256 numFounders = settings.numFounders;
 
