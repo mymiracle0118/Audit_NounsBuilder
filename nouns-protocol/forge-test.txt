@@ -39,10 +39,15 @@ forge test -vvvv --match-path test/Token.t.sol --match-contract TokenTest --matc
 forge test -vvvv --match-path test/Token.t.sol --match-contract TokenTest --match-test "test_updatefounders_error*"
 
 
-//Auction
+// Auction
 
 forge test -vvvv --match-path test/Auction.t.sol --match-contract AuctionTest --match-test "test_AuctionHouseInitialized*"
 
 forge test -vvvv --match-path test/Auction.t.sol --match-contract AuctionTest --match-test "test_CreateMultipleBidsAfterZero*"
 
-test_CreateMultipleBidsAfterZero
+// Manager
+forge test -vvvv --match-path test/Manager.t.sol --match-contract ManagerTest --match-test "test_GetAddresses*"
+
+forge test -vvvv --match-path test/Manager.t.sol --match-contract ManagerTest --match-test "test_TokenInitialized*"
+
+test_TokenInitialized
